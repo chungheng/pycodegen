@@ -152,7 +152,7 @@ class CodeGenerator():
         del self.var[-1]
 
     def handle_store_attr(self, ins):
-        self.var[-1] += "." + ins.arg_name
+        self.handle_load_attr(ins)
         self.var[-2] = self.var[-1] + ' = ' + self.var[-2]
         del self.var[-1]
 
