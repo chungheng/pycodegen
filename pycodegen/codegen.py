@@ -32,7 +32,7 @@ class CodeGenerator():
 
     def output_statement(self):
         spaces = " " * (self.offset + self.space)
-        self.ostream.write( + self.var[0] + '\n')
+        self.ostream.write(spaces + self.var[0] + '\n')
         self._post_output()
 
     def generate(self):
