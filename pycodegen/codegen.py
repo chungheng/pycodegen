@@ -9,12 +9,14 @@ Instruction = namedtuple('Instruction',
 class CodeGenerator():
     def __init__(self, func, **kwargs):
         self.ostream = kwargs.pop('ostream', sys.stdout)
+        self.indent = kwargs.pop('indent', 4)
+        self.offset = kwargs.pop('offset', 0)
 
         self.func = func
         self.instructions = self.disassemble(func)
 
         self.var = []
-        self.indent = 0
+        self.space = 0
         self.jump_targets = []
         self.enter_indent = False
         self.leave_indent = False
@@ -22,14 +24,15 @@ class CodeGenerator():
     def _post_output(self):
         self.var = []
         if self.enter_indent:
-            self.indent += 4
+            self.space += self.indent
             self.enter_indent = False
         if self.leave_indent:
-            self.indent -= 4
+            self.space -= self.indent
             self.leave_indent = False
 
     def output_statement(self):
-        self.ostream.write((" " * self.indent) + self.var[0] + '\n')
+        spaces = " " * (self.offset + self.space)
+        self.ostream.write( + self.var[0] + '\n')
         self._post_output()
 
     def generate(self):
@@ -47,7 +50,7 @@ class CodeGenerator():
                     if len(self.var):
                         self.output_statement()
                     self.jump_targets.pop()
-                    self.indent -= 4
+                    self.space -= self.indent
                     self.leave_indent = False
 
             handle = getattr(self, 'handle_' + ins.opname.lower(), None)
