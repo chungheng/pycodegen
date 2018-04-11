@@ -1,12 +1,15 @@
 from dis import findlabels, findlinestarts
 from opcode import *
 from collections import namedtuple
+import sys
 
 Instruction = namedtuple('Instruction',
     ('line', 'curr_ins', 'jump', 'addr', 'opname', 'arg', 'arg_name'))
 
 class CodeGenerator():
-    def __init__(self, func):
+    def __init__(self, func, **kwargs):
+        self.ostream = kwargs.pop('ostream', sys.stdout)
+
         self.func = func
         self.instructions = self.disassemble(func)
 
@@ -15,8 +18,6 @@ class CodeGenerator():
         self.jump_targets = []
         self.enter_indent = False
         self.leave_indent = False
-
-        self.output_statement = self.print_statement
 
     def _post_output(self):
         self.var = []
@@ -27,8 +28,8 @@ class CodeGenerator():
             self.indent -= 4
             self.leave_indent = False
 
-    def print_statement(self):
-        print (" " * self.indent) + self.var[0]
+    def output_statement(self):
+        self.ostream.write((" " * self.indent) + self.var[0] + '\n')
         self._post_output()
 
     def generate(self):
