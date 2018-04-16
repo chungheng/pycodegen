@@ -43,17 +43,11 @@ class CodeGenerator(object):
             if not len(ins):
                 continue
             if ins.line > 0 and line != ins.line:
-                if line > 0:
+                if line > 0 and len(self.var):
                     self.output_statement()
                 line = ins.line
 
-            if ins.jump == ">>":
-                if len(self.jump_targets) and self.jump_targets[0] == ins.addr:
-                    if len(self.var):
-                        self.output_statement()
-                    self.jump_targets.pop()
-                    self.space -= self.indent
-                    self.leave_indent = False
+            self.process_jump(ins)
 
             handle = getattr(self, 'handle_' + ins.opname.lower(), None)
             if handle is not None:
@@ -124,6 +118,17 @@ class CodeGenerator(object):
             instructions.append(ins)
             output = []
         return instructions
+
+    def process_jump(self, ins):
+        if ins.jump == ">>":
+            if len(self.jump_targets) and self.jump_targets[0] == ins.addr:
+                if len(self.var):
+                    self.output_statement()
+                self.jump_targets.pop()
+                self.space -= self.indent
+                self.leave_indent = False
+                self.var.append('')
+                self.output_statement()
 
     def handle_load_fast(self, ins):
         self.var.append( ins.arg_name )
@@ -221,6 +226,9 @@ class CodeGenerator(object):
             self.var.append("else:")
             self.enter_indent = True
             self.jump_targets.append(target)
+        else:
+            self.var.append('')
+            self.output_statement()
 
     def handle_return_value(self, ins):
         self.var[-1] = "return %s" % self.var[-1]
