@@ -136,6 +136,14 @@ class CodeGenerator(object):
     def handle_load_attr(self, ins):
         self.var[-1] += "." + ins.arg_name
 
+    def handle_store_subscr(self, ins):
+        self.var[-3] = "%s[%s] = %s" % (self.var[-2], self.var[-1], self.var[-3])
+        del self.var[-2:]
+
+    def handle_binary_subscr(self, ins):
+        self.var[-2] = "%s[%s]" % (self.var[-2], self.var[-1])
+        del self.var[-1]
+
     def handle_binary_add(self, ins):
         self.var[-2] = '(%s + %s)' % (self.var[-2], self.var[-1])
         del self.var[-1]
