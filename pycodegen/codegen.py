@@ -6,11 +6,12 @@ import sys
 Instruction = namedtuple('Instruction',
     ('line', 'curr_ins', 'jump', 'addr', 'opname', 'arg', 'arg_name'))
 
-class CodeGenerator():
+class CodeGenerator(object):
     def __init__(self, func, **kwargs):
         self.ostream = kwargs.pop('ostream', sys.stdout)
         self.indent = kwargs.pop('indent', 4)
         self.offset = kwargs.pop('offset', 0)
+        self.newline = kwargs.pop('newline', '\n')
 
         self.func = func
         self.instructions = self.disassemble(func)
@@ -32,7 +33,8 @@ class CodeGenerator():
 
     def output_statement(self):
         spaces = " " * (self.offset + self.space)
-        self.ostream.write(spaces + self.var[0] + '\n')
+        for statement in self.var:
+            self.ostream.write(spaces + statement + self.newline)
         self._post_output()
 
     def generate(self):
