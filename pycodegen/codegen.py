@@ -190,6 +190,11 @@ class CodeGenerator(object):
         self.var[-2] = "(%s + %s)" % (self.var[-2], self.var[-1])
         del self.var[-1]
 
+    def handle_inplace_subtract(self, ins):
+        self.var[-2] = "(%s - %s)" % (self.var[-2], self.var[-1])
+        del self.var[-1]
+
+
     def handle_rot_two(self, ins):
         tmp = self.var[-2]
         self.var[-2] = self.var[-1]
