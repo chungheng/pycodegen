@@ -162,8 +162,7 @@ class CodeGenerator(object):
         del self.var[-1]
 
     def handle_store_fast(self, ins):
-        tmp = ins.arg_name
-        self.var[-1] = tmp + ' = ' + self.var[-1]
+        self.var[-1] = ins.arg_name + ' = ' + self.var[-1]
 
     def handle_unary_negative(self, ins):
         self.var[-1] = '-%s' % self.var[-1]
