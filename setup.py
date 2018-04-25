@@ -61,8 +61,8 @@ if __name__ == "__main__":
         url = URL,
         maintainer = MAINTAINER,
         maintainer_email = MAINTAINER_EMAIL,
-        #namespace_packages = NAMESPACE_PACKAGES,
         packages=PACKAGES,
-        include_package_data = True,
-        install_requires=[]
+        install_requires=[
+            'jinja >= 2.8'
+        ]
     )
