@@ -70,19 +70,20 @@ __global__ void {{ model_name }} (
     int num_thread,
     {{ float_type }} dt
     {%- for key in states -%}
-    ,\n    {{ float_type }} g_{{ key }}
+    ,\n    {{ float_type }} *g_{{ key }}
     {%- endfor %}
     {%- if inters %}
     {%- for key in inters -%}
-    ,\n    {{ float_type }} g_{{ key }}
+    ,\n    {{ float_type }} *g_{{ key }}
     {%- endfor %}
     {%- endif %}
     {%- for key in ode_signature -%}
-    ,\n    {{ float_type }} g_{{ key }}
+    ,\n    {{ float_type }} *g_{{ key }}
     {%- endfor %}
 )
 {
-    int tid;
+    /* TODO: option for 1-D or 2-D */
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid > num_thread)
         return;
 
@@ -125,6 +126,11 @@ __global__ void {{ model_name }} (
     {%- for key in states %}
     g_{{ key }}[tid] = states.{{ key }};
     {%- endfor %}
+    {%- if inters %}
+    {%- for key in inters %}
+    g_{{ key }}[tid] = inters.{{ key }};
+    {%- endfor %}
+    {% endif %}
 
     return;
 }
