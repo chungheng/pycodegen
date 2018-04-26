@@ -157,16 +157,16 @@ class CodeGenerator(object):
         del self.var[-1]
 
     def handle_binary_multiply(self, ins):
-        self.var[-2] = '%s * %s' % (self.var[-2], self.var[-1])
+        self.var[-2] = '(%s * %s)' % (self.var[-2], self.var[-1])
         del self.var[-1]
 
     def handle_binary_divide(self, ins):
-        self.var[-2] = '%s / %s' % (self.var[-2], self.var[-1])
+        self.var[-2] = '(%s / %s)' % (self.var[-2], self.var[-1])
         del self.var[-1]
 
     def handle_compare_op(self, ins):
         op = ins.arg_name
-        self.var[-2] = '%s %s %s' % (self.var[-2], op, self.var[-1])
+        self.var[-2] = '(%s %s %s)' % (self.var[-2], op, self.var[-1])
         del self.var[-1]
 
     def handle_store_attr(self, ins):
@@ -178,7 +178,7 @@ class CodeGenerator(object):
         self.var[-1] = ins.arg_name + ' = ' + self.var[-1]
 
     def handle_unary_negative(self, ins):
-        self.var[-1] = '-%s' % self.var[-1]
+        self.var[-1] = '(-%s)' % self.var[-1]
 
     def handle_pop_jump_if_true(self, ins):
         self.jump_targets.append(ins.arg)
