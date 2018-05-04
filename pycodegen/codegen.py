@@ -37,9 +37,10 @@ class CodeGenerator(object):
             self.ostream.write(spaces + statement + self.newline)
         self._post_output()
 
-    def generate(self):
+    def generate(self, instructions=None):
+        instructions = instructions or self.instructions
         line = -1
-        for ins in self.instructions:
+        for ins in instructions:
             if not len(ins):
                 continue
             if ins.line > 0 and line != ins.line:
@@ -52,6 +53,8 @@ class CodeGenerator(object):
             handle = getattr(self, 'handle_' + ins.opname.lower(), None)
             if handle is not None:
                 handle(ins)
+            else:
+                print ins
 
         self.output_statement()
 
