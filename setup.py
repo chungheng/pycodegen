@@ -63,6 +63,6 @@ if __name__ == "__main__":
         maintainer_email = MAINTAINER_EMAIL,
         packages=PACKAGES,
         install_requires=[
-            'jinja >= 2.8'
+            'jinja2 >= 2.8'
         ]
     )
