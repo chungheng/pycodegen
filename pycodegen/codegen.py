@@ -1,6 +1,9 @@
+from __future__ import print_function
+
 from dis import findlabels, findlinestarts
 from opcode import *
 from collections import namedtuple
+
 import sys
 
 Instruction = namedtuple('Instruction',
@@ -54,7 +57,7 @@ class CodeGenerator(object):
             if handle is not None:
                 handle(ins)
             else:
-                print ins
+                print(ins)
 
         self.output_statement()
 
@@ -97,7 +100,7 @@ class CodeGenerator(object):
                 extended_arg = 0
                 i = i+2
                 if op == EXTENDED_ARG:
-                    extended_arg = oparg*65536L
+                    extended_arg = oparg*65536
 #                 output.append( repr(oparg).rjust(5) ),
                 output.append( int(oparg) )
                 if op in hasconst:
