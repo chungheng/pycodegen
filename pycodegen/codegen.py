@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-from dis import findlabels, findlinestarts
+import dis
 from opcode import *
 from collections import namedtuple
 
@@ -17,7 +17,7 @@ class CodeGenerator(object):
         self.newline = kwargs.pop('newline', '\n')
 
         self.func = func
-        self.instructions = self.disassemble(func)
+        self.instructions = self.get_instructions(func)
 
         self.var = []
         self.space = 0
@@ -61,15 +61,20 @@ class CodeGenerator(object):
 
         self.output_statement()
 
-    def disassemble(self, co, lasti=-1):
+    def get_instructions(self, co, lasti=-1):
         """
-        Disassemble a code object.
+        Get the bytecode instructions of a code object.
 
         This function is modified from the official Python 2.7 dis.disassemble.
         """
+        # python3
+        if sys.version_info[0] == 3:
+            return [x for x in dis.get_instructions(co)]
+
+        # python2
         code = co.co_code
-        labels = findlabels(code)
-        linestarts = dict(findlinestarts(co))
+        labels = dis.findlabels(code)
+        linestarts = dict(dis.findlinestarts(co))
         n = len(code)
         i = 0
         extended_arg = 0
