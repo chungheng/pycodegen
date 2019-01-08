@@ -12,8 +12,7 @@ PY3 = sys.version_info[0] == 3
 
 if PY2:
     Instruction = namedtuple('Instruction',
-        ('line', 'curr_ins', 'jump', 'addr', 'opname', 'arg', 'arg_name'))
-        ('starts_line', 'curr_ins', 'is_jump_target', 'offset', 'opname', 'arg', 'arg_val')
+        ('starts_line', 'curr_ins', 'is_jump_target', 'offset', 'opname', 'arg', 'arg_val'))
 
 class CodeGenerator(object):
     def __init__(self, func, **kwargs):
