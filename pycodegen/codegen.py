@@ -176,6 +176,10 @@ class CodeGenerator(object):
         self.var[-2] = '(%s * %s)' % (self.var[-2], self.var[-1])
         del self.var[-1]
 
+    def handle_binary_true_divide(self, ins):
+        self.var[-2] = '(%s / %s)' % (self.var[-2], self.var[-1])
+        del self.var[-1]
+
     def handle_binary_divide(self, ins):
         self.var[-2] = '(%s / %s)' % (self.var[-2], self.var[-1])
         del self.var[-1]
