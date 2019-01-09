@@ -12,7 +12,7 @@ PY3 = sys.version_info[0] == 3
 
 if PY2:
     Instruction = namedtuple('Instruction',
-        ('starts_line', 'curr_ins', 'is_jump_target', 'offset', 'opname', 'arg', 'arg_val'))
+        ('starts_line', 'curr_ins', 'is_jump_target', 'offset', 'opname', 'arg', 'argval'))
 
 class CodeGenerator(object):
     def __init__(self, func, **kwargs):
@@ -147,10 +147,10 @@ class CodeGenerator(object):
                 self.output_statement()
 
     def handle_load_fast(self, ins):
-        self.var.append( ins.arg_val )
+        self.var.append( ins.argval )
 
     def handle_load_attr(self, ins):
-        self.var[-1] += "." + ins.arg_val
+        self.var[-1] += "." + ins.argval
 
     def handle_store_subscr(self, ins):
         self.var[-3] = "%s[%s] = %s" % (self.var[-2], self.var[-1], self.var[-3])
@@ -181,7 +181,7 @@ class CodeGenerator(object):
         del self.var[-1]
 
     def handle_compare_op(self, ins):
-        op = ins.arg_val
+        op = ins.argval
         self.var[-2] = '(%s %s %s)' % (self.var[-2], op, self.var[-1])
         del self.var[-1]
 
@@ -191,7 +191,7 @@ class CodeGenerator(object):
         del self.var[-1]
 
     def handle_store_fast(self, ins):
-        self.var[-1] = ins.arg_val + ' = ' + self.var[-1]
+        self.var[-1] = ins.argval + ' = ' + self.var[-1]
 
     def handle_unary_negative(self, ins):
         self.var[-1] = '(-%s)' % self.var[-1]
@@ -207,10 +207,10 @@ class CodeGenerator(object):
         self.var[-1] = 'if %s:' % self.var[-1]
 
     def handle_load_global(self, ins):
-        self.var.append( ins.arg_val )
+        self.var.append( ins.argval )
 
     def handle_load_const(self, ins):
-        self.var.append( ins.arg_val )
+        self.var.append( ins.argval )
 
     def handle_dup_top(self, ins):
         self.var.append( self.var[-1] )
@@ -243,7 +243,7 @@ class CodeGenerator(object):
         self.leave_indent = True
         self.output_statement()
 
-        target = int(ins.arg_val.split(' ')[-1])
+        target = int(ins.argval.split(' ')[-1])
         old_target = self.jump_targets.pop()
 
         if target != old_target:
