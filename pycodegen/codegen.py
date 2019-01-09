@@ -58,7 +58,7 @@ class CodeGenerator(object):
 
             self.process_jump(ins)
 
-            handle = getattr(self, 'handle_' + ins.opname.lower(), None)
+            handle = getattr(self, "handle_{}".format(ins.opname.lower()), None)
             if handle is not None:
                 handle(ins)
             else:
@@ -153,7 +153,8 @@ class CodeGenerator(object):
         self.var[-1] += ".{0}".format(ins.argval)
 
     def handle_store_subscr(self, ins):
-        self.var[-3] = "%s[%s] = %s" % (self.var[-2], self.var[-1], self.var[-3])
+        temp = "{0}[{1}] = {2}"
+        self.var[-3] = temp.format(self.var[-2], self.var[-1], self.var[-3])
         del self.var[-2:]
 
     def handle_binary_subscr(self, ins):
