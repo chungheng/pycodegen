@@ -118,7 +118,7 @@ class CodeGenerator(object):
                 elif op in hasname:
                     output.append( co.co_names[oparg] ),
                 elif op in hasjrel:
-                    output.append( 'to ' + repr(i + oparg) ),
+                    output.append( i + oparg ),
                 elif op in haslocal:
                     output.append( co.co_varnames[oparg] ),
                 elif op in hascompare:
