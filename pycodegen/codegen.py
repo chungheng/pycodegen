@@ -150,65 +150,65 @@ class CodeGenerator(object):
         self.var.append( ins.argval )
 
     def handle_load_attr(self, ins):
-        self.var[-1] += "." + ins.argval
+        self.var[-1] += ".{0}".format(ins.argval)
 
     def handle_store_subscr(self, ins):
         self.var[-3] = "%s[%s] = %s" % (self.var[-2], self.var[-1], self.var[-3])
         del self.var[-2:]
 
     def handle_binary_subscr(self, ins):
-        self.var[-2] = "%s[%s]" % (self.var[-2], self.var[-1])
+        self.var[-2] = "{0}[{1}]".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
     def handle_binary_add(self, ins):
-        self.var[-2] = '(%s + %s)' % (self.var[-2], self.var[-1])
+        self.var[-2] = "({0} + {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
     def handle_binary_subtract(self, ins):
-        self.var[-2] = '(%s - %s)' % (self.var[-2], self.var[-1])
+        self.var[-2] = "({0} - {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
     def handle_binary_power(self, ins):
-        self.var[-2] = '%s ** %s' % (self.var[-2], self.var[-1])
+        self.var[-2] = "{0} ** {1}".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
     def handle_binary_multiply(self, ins):
-        self.var[-2] = '(%s * %s)' % (self.var[-2], self.var[-1])
+        self.var[-2] = "({0} * {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
     def handle_binary_true_divide(self, ins):
-        self.var[-2] = '(%s / %s)' % (self.var[-2], self.var[-1])
+        self.var[-2] = "({0} / {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
     def handle_binary_divide(self, ins):
-        self.var[-2] = '(%s / %s)' % (self.var[-2], self.var[-1])
+        self.var[-2] = "({0} / {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
     def handle_compare_op(self, ins):
         op = ins.argval
-        self.var[-2] = '(%s %s %s)' % (self.var[-2], op, self.var[-1])
+        self.var[-2] = "({0} {1} {2})".format(self.var[-2], op, self.var[-1])
         del self.var[-1]
 
     def handle_store_attr(self, ins):
         self.handle_load_attr(ins)
-        self.var[-2] = self.var[-1] + ' = ' + self.var[-2]
+        self.var[-2] = "{0} = {1}".format(self.var[-1], self.var[-2])
         del self.var[-1]
 
     def handle_store_fast(self, ins):
-        self.var[-1] = ins.argval + ' = ' + self.var[-1]
+        self.var[-1] = "{0} = {1}".format(ins.argval, self.var[-1])
 
     def handle_unary_negative(self, ins):
-        self.var[-1] = '(-%s)' % self.var[-1]
+        self.var[-1] = "(-{0})".format(self.var[-1])
 
     def handle_pop_jump_if_true(self, ins):
         self.jump_targets.append(ins.arg)
         self.enter_indent = True
-        self.var[-1] = 'if not %s:' % self.var[-1]
+        self.var[-1] = "if not {0}:".format(self.var[-1])
 
     def handle_pop_jump_if_false(self, ins):
         self.jump_targets.append(ins.arg)
         self.enter_indent = True
-        self.var[-1] = 'if %s:' % self.var[-1]
+        self.var[-1] = "if {0}:".format(self.var[-1])
 
     def handle_load_global(self, ins):
         self.var.append( ins.argval )
@@ -220,11 +220,11 @@ class CodeGenerator(object):
         self.var.append( self.var[-1] )
 
     def handle_inplace_add(self, ins):
-        self.var[-2] = "(%s + %s)" % (self.var[-2], self.var[-1])
+        self.var[-2] = "({0} + {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
     def handle_inplace_subtract(self, ins):
-        self.var[-2] = "(%s - %s)" % (self.var[-2], self.var[-1])
+        self.var[-2] = "({0} - {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
 
@@ -238,9 +238,8 @@ class CodeGenerator(object):
 
     def handle_call_function(self, ins):
         narg = int(ins.arg)
-        tmp = "(%s)" % (' %s,'*(narg-1) + ' %s')
-        tmp = tmp % tuple(self.var[-narg:])
-        self.var[-(narg+1)] += tmp
+        tmp = ", ".format(map(str, self.var[-narg:]))
+        self.var[-(narg+1)] = "{0}({1})".format(self.var[-(narg+1)], tmp)
         del self.var[-narg:]
 
     def handle_jump_forward(self, ins):
@@ -259,4 +258,4 @@ class CodeGenerator(object):
             self.output_statement()
 
     def handle_return_value(self, ins):
-        self.var[-1] = "return %s" % self.var[-1]
+        self.var[-1] = "return {0}".format(self.var[-1])
