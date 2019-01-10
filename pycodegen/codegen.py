@@ -116,7 +116,7 @@ class CodeGenerator(object):
 #                 output.append( repr(oparg).rjust(5) ),
                 output.append( int(oparg) )
                 if op in hasconst:
-                    output.append( repr(co.co_consts[oparg]) ),
+                    output.append( co.co_consts[oparg] ),
                 elif op in hasname:
                     output.append( co.co_names[oparg] ),
                 elif op in hasjrel:
