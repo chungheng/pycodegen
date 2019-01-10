@@ -56,7 +56,8 @@ class CodeGenerator(object):
                     self.output_statement()
                 line = ins.starts_line
 
-            self.process_jump(ins)
+            if ins.is_jump_target:
+                self.process_jump(ins)
 
             handle = getattr(self, "handle_{}".format(ins.opname.lower()), None)
             if handle is not None:
@@ -100,8 +101,9 @@ class CodeGenerator(object):
 
             if i == lasti: output.append( '-->' ),
             else: output.append( '   ' ),
-            if i in labels: output.append( '>>' ),
-            else: output.append( '  ' ),
+
+            # determine if jump target
+            output.append( i in labels )
             output.append( int(i) ),
             output.append( opname[op] ),
             i = i+1
@@ -136,15 +138,14 @@ class CodeGenerator(object):
         return instructions
 
     def process_jump(self, ins):
-        if ins.is_jump_target == ">>":
-            if len(self.jump_targets) and self.jump_targets[0] == ins.offset:
-                if len(self.var):
-                    self.output_statement()
-                self.jump_targets.pop()
-                self.space -= self.indent
-                self.leave_indent = False
-                self.var.append('')
+        if len(self.jump_targets) and self.jump_targets[0] == ins.offset:
+            if len(self.var):
                 self.output_statement()
+            self.jump_targets.pop()
+            self.space -= self.indent
+            self.leave_indent = False
+            self.var.append('')
+            self.output_statement()
 
     def handle_load_fast(self, ins):
         self.var.append( ins.argval )
