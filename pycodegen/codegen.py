@@ -240,9 +240,11 @@ class CodeGenerator(object):
 
     def handle_call_function(self, ins):
         narg = int(ins.arg)
-        args = ", ".join(map(str, self.var[-narg:]))
-        self.var[-(narg+1)] += "({})".format(args)
-        del self.var[-narg:]
+        args = [] if narg == 0 else [str(x) for x in self.var[-narg:]]
+        self.var[-(narg+1)] += "({})".format(', '.join(args))
+
+        if narg > 0:
+            del self.var[-narg:]
 
     def handle_jump_forward(self, ins):
         self.leave_indent = True
