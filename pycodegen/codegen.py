@@ -240,8 +240,8 @@ class CodeGenerator(object):
 
     def handle_call_function(self, ins):
         narg = int(ins.arg)
-        tmp = ", ".format(map(str, self.var[-narg:]))
-        self.var[-(narg+1)] = "{0}({1})".format(self.var[-(narg+1)], tmp)
+        args = ", ".join(map(str, self.var[-narg:]))
+        self.var[-(narg+1)] += "({})".format(args)
         del self.var[-narg:]
 
     def handle_jump_forward(self, ins):
