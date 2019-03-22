@@ -158,8 +158,32 @@ class CodeGenerator(object):
         self.var[-3] = temp.format(self.var[-2], self.var[-1], self.var[-3])
         del self.var[-2:]
 
-    def handle_binary_subscr(self, ins):
-        self.var[-2] = "{0}[{1}]".format(self.var[-2], self.var[-1])
+    # Binary operation
+    def handle_binary_power(self, ins):
+        self.var[-2] = "{0} ** {1}".format(self.var[-2], self.var[-1])
+        del self.var[-1]
+
+    def handle_binary_multiply(self, ins):
+        self.var[-2] = "({0} * {1})".format(self.var[-2], self.var[-1])
+        del self.var[-1]
+
+    def handle_binary_matrix_multiply(self, ins):
+        raise TypeError("BINARY_MATRIX_MULTIPLY is not supported.")
+
+    def handle_binary_floor_divide(self, ins):
+        self.var[-2] = "({0} / {1})".format(self.var[-2], self.var[-1])
+        del self.var[-1]
+
+    def handle_binary_divide(self, ins):
+        self.var[-2] = "({0} / {1})".format(self.var[-2], self.var[-1])
+        del self.var[-1]
+
+    def handle_binary_true_divide(self, ins):
+        self.var[-2] = "({0} / {1})".format(self.var[-2], self.var[-1])
+        del self.var[-1]
+
+    def handle_binary_modulo(self, ins):
+        self.var[-2] = "({0} % {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
     def handle_binary_add(self, ins):
@@ -170,20 +194,28 @@ class CodeGenerator(object):
         self.var[-2] = "({0} - {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
-    def handle_binary_power(self, ins):
-        self.var[-2] = "{0} ** {1}".format(self.var[-2], self.var[-1])
+    def handle_binary_subscr(self, ins):
+        self.var[-2] = "{0}[{1}]".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
-    def handle_binary_multiply(self, ins):
-        self.var[-2] = "({0} * {1})".format(self.var[-2], self.var[-1])
+    def handle_binary_lshift(self, ins):
+        self.var[-2] = "({0} << {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
-    def handle_binary_true_divide(self, ins):
-        self.var[-2] = "({0} / {1})".format(self.var[-2], self.var[-1])
+    def handle_binary_rshift(self, ins):
+        self.var[-2] = "({0} >> {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
-    def handle_binary_divide(self, ins):
-        self.var[-2] = "({0} / {1})".format(self.var[-2], self.var[-1])
+    def handle_binary_and(self, ins):
+        self.var[-2] = "({0} & {1})".format(self.var[-2], self.var[-1])
+        del self.var[-1]
+
+    def handle_binary_xor(self, ins):
+        self.var[-2] = "({0} ^ {1})".format(self.var[-2], self.var[-1])
+        del self.var[-1]
+
+    def handle_binary_or(self, ins):
+        self.var[-2] = "({0} | {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
     def handle_compare_op(self, ins):
