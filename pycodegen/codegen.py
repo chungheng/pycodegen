@@ -218,6 +218,54 @@ class CodeGenerator(object):
         self.var[-2] = "({0} | {1})".format(self.var[-2], self.var[-1])
         del self.var[-1]
 
+    # in-place operation
+    def handle_inplace_power(self, ins):
+        pass
+
+    def handle_inplace_multiply(self, ins):
+        pass
+
+    def handle_inplace_matrix_multiply(self, ins):
+        raise TypeError("BINARY_MATRIX_MULTIPLY is not supported.")
+
+    def handle_inplace_floor_divide(self, ins):
+        pass
+
+    def handle_inplace_divide(self, ins):
+        pass
+
+    def handle_inplace_true_divide(self, ins):
+        pass
+
+    def handle_inplace_modulo(self, ins):
+        pass
+
+    def handle_inplace_add(self, ins):
+        self.var[-2] = "({0} + {1})".format(self.var[-2], self.var[-1])
+        del self.var[-1]
+
+    def handle_inplace_subtract(self, ins):
+        self.var[-2] = "({0} - {1})".format(self.var[-2], self.var[-1])
+        del self.var[-1]
+
+    def handle_inplace_subscr(self, ins):
+        pass
+
+    def handle_inplace_lshift(self, ins):
+        pass
+
+    def handle_inplace_rshift(self, ins):
+        pass
+
+    def handle_inplace_and(self, ins):
+        pass
+
+    def handle_inplace_xor(self, ins):
+        pass
+
+    def handle_inplace_or(self, ins):
+        pass
+
     def handle_compare_op(self, ins):
         op = ins.argval
         self.var[-2] = "({0} {1} {2})".format(self.var[-2], op, self.var[-1])
@@ -252,15 +300,6 @@ class CodeGenerator(object):
 
     def handle_dup_top(self, ins):
         self.var.append( self.var[-1] )
-
-    def handle_inplace_add(self, ins):
-        self.var[-2] = "({0} + {1})".format(self.var[-2], self.var[-1])
-        del self.var[-1]
-
-    def handle_inplace_subtract(self, ins):
-        self.var[-2] = "({0} - {1})".format(self.var[-2], self.var[-1])
-        del self.var[-1]
-
 
     def handle_rot_two(self, ins):
         tmp = self.var[-2]
