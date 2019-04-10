@@ -266,6 +266,12 @@ class CodeGenerator(object):
     def handle_inplace_or(self, ins):
         pass
 
+    def handle_store_subscr(self, ins):
+        pass
+
+    def handle_delete_subscr(self, ins):
+        pass
+
     def handle_compare_op(self, ins):
         op = ins.argval
         self.var[-2] = "({0} {1} {2})".format(self.var[-2], op, self.var[-1])
